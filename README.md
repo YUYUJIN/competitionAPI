@@ -10,4 +10,47 @@
 <img src=https://img.shields.io/badge/scikit--learn-1.1.2-lightgrey></img>
 <img src=https://img.shields.io/badge/pandas-1.4.3-red></img>
 
-## test
+## How to use
+사전준비 및 필요 dependency 설치   
+```
+git clone https://github.com/YUYUJIN/competitionAPI.git
+cd competitionAPI
+pip install -r requirements.txt
+```
+
+workplace 내에 .env 파일을 만들어 Database의 정보생성
+본 프로젝트에서는 AWS의 RDS를 사용하였고, 엔진으로는 MySQL로 구성하였다.  
+<(rds)이미지>  
+
+이후 크롤링 코드를 실행하여 크롤링한 정보를 Database에 저장한다.  
+```
+python crowling.py
+```
+<(db)이미지>  
+
+이후 app을 구동하여 간이 API를 사용한다.  
+```
+python app.py
+```
+
+## Crowling
+해당 프로젝트에서 크롤링될 사이트로는 구글 검색에서 상위에 랭크된 공모전 사이트를 이용하였다.  
+링커리어: https://linkareer.com  
+스펙토리: http://spectory.net  
+요즘것들: https://allforyoung.com  
+
+selenium으로 조작하고, xpath를 위주로 정보에 접근하였다. 몇몇 사이트는 동적으로 페이지가 랜딩되기 때문에 css 코드가 수정되는 경우가 많았고, class등의 항목은 누락되는 경우가 많아 xpath로 접근하였다. 추가로 xpath는 프로젝트 개발 시점에 맞게 css 코드 내 규칙을 찾아 작성되었으므로 추후 올바르지 않을 수 있다.
+
+## TF-IDF && Cosine Similarity
+크롤링을 통해 저장한 데이터를 유저가 선호하는 공모전 데이터와 유사도를 비교하여 상위 10개의 데이터를 찾는다.  
+유저가 선호하는 공모전이 2개 이상인 경우에는 각 공모전과 유사한 10개의 공모전들을 찾고 중복 정도를 검사하여 중복도가 높은 최상위 10개의 데이터를 사용한다.  
+이 때 유사도는 TF-IDF와 코사인 유사도 방식만을 사용하여 해당 정보의 유사도를 비교한다.  
+참고자료: https://wikidocs.net/24603  
+
+## API Document
+<(API 명세서)이미지>
+최종 API는 위와 같다.
+API Document: https://documenter.getpostman.com/view/15695216/VUqptxfz  
+
+## Reference
+딥 러닝을 이용한 자연어 처리 입문: https://wikidocs.net/24603  
